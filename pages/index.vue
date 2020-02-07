@@ -24,8 +24,8 @@
 
         <!-- 输入框 -->
         <el-row type="flex" align="middle" class="search-input" >
-          <input :placeholder='selects[selected].placeholder'/>
-          <i class="el-icon-search"></i>
+          <input :placeholder='selects[selected].placeholder' v-model='search_value'/>
+          <i class="el-icon-search" @click='search(selected)'></i>
         </el-row>
       </div>
     </div>
@@ -41,19 +41,23 @@ export default {
       selects:[
         {
           title:'攻略',
-          placeholder:'搜索城市'
+          placeholder:'搜索城市',
+          next:'post?city='
         },
         {
           title:'酒店',
-          placeholder:'请输入城市搜索酒店'
+          placeholder:'请输入城市搜索酒店',
+          next:'hotel?city='
         },
         {
           title:'机票',
-          placeholder:'请输入出发地'
+          placeholder:'请输入出发地',
+          next:'/air'
         }
       ],
       // 为了可以接收到点击的索引是那个，方便placeholder因为placeholder不在title的v-for里面
       selected:0,
+      search_value:'',
     };
   },
   async mounted() {
@@ -66,9 +70,16 @@ export default {
   methods: {
     choose(index) {
       this.selected=index;
+      this.search_value='';
       if(index==2) {
         this.$router.push('/air')
       }
+    },
+    search(index) {
+      // console.log(index);
+      // console.log(this.search_value)
+      this.$router.push(this.selects[selected].next+this.search_value)
+      this.$router.push(this.selects[index].next+this.search_value)
     }
   }
 };
