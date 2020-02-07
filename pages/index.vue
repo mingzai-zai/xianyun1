@@ -78,7 +78,7 @@ export default {
     search(index) {
       // console.log(index);
       // console.log(this.search_value)
-      this.$router.push(this.selects[selected].next+this.search_value)
+      this.$router.push(this.selects[this.selected].next+this.search_value)
       this.$router.push(this.selects[index].next+this.search_value)
     }
   }
