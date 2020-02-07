@@ -1,0 +1,22 @@
+{
+  "name": "xianyun1",
+  "version": "1.0.0",
+  "description": "My cat&#39;s meow Nuxt.js project",
+  "author": "mingzai-zai",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "nuxt": "^2.0.0",
+    "element-ui": "^2.4.11",
+    "@nuxtjs/axios": "^5.3.6"
+  },
+  "devDependencies": {},
+  "main": "nuxt.config.js",
+  "keywords": [],
+  "license": "ISC"
+}
