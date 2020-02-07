@@ -37,6 +37,11 @@ export default {};
 </script>
 
 <style lang="less" scoped>
+.headers{
+  border-bottom: 2px solid #ccc;
+  box-shadow: 0 2px 7px 0px #666;
+  min-width: 1000px;
+}
 .row {
   height: 60px;
   width: 1000px;
