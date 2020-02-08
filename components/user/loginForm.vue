@@ -67,20 +67,27 @@ export default {
         this.$refs.loginForm.validate(async (valid) => {
           if (valid) {
             // console.log(this.loginForm)
-            let res = await this.$axios.post('/accounts/login',{
-                ...this.loginForm
+            // let res = await this.$axios.post('/accounts/login',{
+            //     ...this.loginForm
+            // })
+            // // console.log(res);
+            // if(res.status===200) {
+            //     let {data} =res
+            //     this.$store.commit('user/setUserInfo', data)
+            //     this.$message.success('登录成功')
+            //     setTimeout(()=>{
+            //         this.$router.push('/')
+            //     },1000)
+            // }
+            this.$store.dispatch('user/login',this.loginForm)
+            .then(data=>{
+              this.$message.success('登录成功')
+              // console.log(data);
+              setTimeout(()=>{
+                this.$router.push('/')
+              },1000)
             })
-            // console.log(res);
-            if(res.status===200) {
-                let {data} =res
-                this.$store.commit('user/setUserInfo', data)
-                this.$message.success('登录成功')
-                setTimeout(()=>{
-                    this.$router.push('/')
-                },1000)
-            }else {
-                this.$message.fail('用户认证失败')
-            }
+            
           } else {
             // console.log('error submit!!');
             this.$message.fail('信息有误')

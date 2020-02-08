@@ -10,10 +10,29 @@ export const state=()=>{
         }
     }
 }
-
+//固定属性，同步修改state中的值的方法
 export const mutations= {
     // 第一个参数一定是state
     setUserInfo(state,data) {
         state.userInfo=data;
+    }
+}
+// 固定属性，异步修改state中的值的方法，一般用来存放接口滴
+export const actions= {
+    // 第一个参数一定是store  就是里面所有东西啦
+    // store也可以写成{commit}相当于解构
+    async login(store,data){
+        let res = await this.$axios.post('/accounts/login',data)
+        // console.log(res);
+        // console.log(store)
+        // console.log(this);this是store
+        if(res.status===200) {
+            let {data} =res;
+            // console.log(data);
+            store.commit('setUserInfo', data)
+            // commit('setUserInfo', data)
+            // 返回数据token和user
+            return data;
+        }
     }
 }
