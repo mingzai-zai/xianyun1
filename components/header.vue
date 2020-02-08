@@ -40,7 +40,7 @@
           </el-button>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item>个人中心</el-dropdown-item>
-            <el-dropdown-item>退出</el-dropdown-item>
+            <el-dropdown-item @click='out'>退出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
         <!-- 在组件里面使用不会报错，但是在平常标签内会报错，因为一开始userinfo就是空的 -->
@@ -52,7 +52,14 @@
 </template>
 
 <script>
-export default {};
+export default {
+  methods: {
+    out(){
+      // this.$store.state.user.userInfo={};这样做是错误的，state里面只可以取不能修改数据
+        
+    }
+  }
+};
 </script>
 
 <style lang="less" scoped>

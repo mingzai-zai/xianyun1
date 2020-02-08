@@ -79,6 +79,7 @@ export default {
             //         this.$router.push('/')
             //     },1000)
             // }
+            // this.$store.dispatch('user/login',this.loginForm)接收了console.log显示是一个promise对象，所以用.then，如果没有返回就是undefined
             this.$store.dispatch('user/login',this.loginForm)
             .then(data=>{
               this.$message.success('登录成功')
