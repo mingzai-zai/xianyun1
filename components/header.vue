@@ -65,6 +65,7 @@ export default {
           this.$router.push('user/personal')
         }else if(command==='out') {
           this.$store.commit('user/clearUserMsg',{})
+          this.$message.success('退出成功')
         }
     }
   }

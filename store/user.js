@@ -19,6 +19,9 @@ export const mutations= {
     },
     //删除数据
     clearUserMsg(state,data){
+        console.log(process.browser)
+        // console.log(this)
+        // 自己认为老师做法先删除再赋值可能是不想浪费内存，直接赋值可能还有原来的还是占用内存了，浪费空间
         state.userInfo=data;
     }
 }
