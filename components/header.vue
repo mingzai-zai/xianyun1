@@ -32,15 +32,15 @@
         >
         <!-- 登录后 -->
         <!-- <el-dropdown v-if="$store.state.user.userInfo.token"> -->
-        <el-dropdown v-else>
+        <el-dropdown v-else @command='handleCommand'>
           <el-button class="dropdown_btn">
              <img :src="`${$axios.defaults.baseURL}${$store.state.user.userInfo.user.defaultAvatar}`" alt="" class="person_pic"/>
             {{ $store.state.user.userInfo.user.nickname}}
             <i class="el-icon-caret-bottom el-icon--right"></i>
           </el-button>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>个人中心</el-dropdown-item>
-            <el-dropdown-item @click='out'>退出</el-dropdown-item>
+            <el-dropdown-item command='personal'>个人中心</el-dropdown-item>
+            <el-dropdown-item command='out'>退出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
         <!-- 在组件里面使用不会报错，但是在平常标签内会报错，因为一开始userinfo就是空的 -->
@@ -54,9 +54,18 @@
 <script>
 export default {
   methods: {
-    out(){
-      // this.$store.state.user.userInfo={};这样做是错误的，state里面只可以取不能修改数据
+    // out(){
+    //   // this.$store.state.user.userInfo={};这样做是错误的，state里面只可以取不能修改数据
         
+    // }
+    handleCommand(command){
+        // console.log(command)
+        if(command==='personal') {
+          // console.log(1);
+          this.$router.push('user/personal')
+        }else if(command==='out') {
+          this.$store.commit('user/clearUserMsg',{})
+        }
     }
   }
 };

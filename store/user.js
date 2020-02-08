@@ -18,9 +18,9 @@ export const mutations= {
         state.userInfo=data;
     },
     //删除数据
-    // clearUserMsg(state,data){
-    //     state.userInfo=data;
-    // }
+    clearUserMsg(state,data){
+        state.userInfo=data;
+    }
 }
 // 固定属性，异步修改state中的值的方法，一般用来存放接口滴
 export const actions= {
