@@ -31,7 +31,8 @@
           >登录/注册</nuxt-link
         >
         <!-- 登录后 -->
-        <el-dropdown v-if="$store.state.user.userInfo.token">
+        <!-- <el-dropdown v-if="$store.state.user.userInfo.token"> -->
+        <el-dropdown v-else>
           <el-button class="dropdown_btn">
              <img :src="`${$axios.defaults.baseURL}${$store.state.user.userInfo.user.defaultAvatar}`" alt="" class="person_pic"/>
             {{ $store.state.user.userInfo.user.nickname}}
@@ -42,6 +43,9 @@
             <el-dropdown-item>退出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
+        <!-- 在组件里面使用不会报错，但是在平常标签内会报错，因为一开始userinfo就是空的 -->
+        <!-- <div><div>{{ $store.state.user.userInfo.user.nickname}}</div></div>
+        {{ $store.state.user.userInfo.user.nickname}} -->
       </div>
     </el-row>
   </div>
