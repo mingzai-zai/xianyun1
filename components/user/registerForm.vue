@@ -125,18 +125,15 @@ export default {
       //每次提交文件都要考虑用户会不会乱来，可能错了ta还继续按，如果没判断就继续请求，服务器压力会很大
       this.$refs.form.validate(valid => {
         if (valid) {
-          console.log(this.form);
-          let { checkpass, ...props } = this.form;
-          this.$axios({
-            url: "/accounts/register",
-            method: "POST",
-            // headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            // 流浪器会默认转换自动设置的Content-Type
-            // 500可能是data传多崩掉了。400传入的东西有问题 或则是多了设置的headers ，404可能是method，url那些有问题，405貌似好像和400一样都是看别人怎么设置的
-            data: props
-          }).then(res => {
-            console.log(res);
-          });
+          // console.log(this.form);
+          //这里也可以删除属性delete
+          let { checkpass, ...data } = this.form;
+          this.$store.dispatch('user/userRegister',data).then(res=>{
+              this.$message.success('注册成功');
+              setTimeout(() => {
+                this.$router.push('/');
+              }, 1000);
+          })
         } else {
           console.log("error submit!!");
           return false;

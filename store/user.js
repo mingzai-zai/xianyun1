@@ -56,5 +56,20 @@ export const actions= {
             return res;
             // 如果组件需要值就return回去，不用的话可以不return，当然此时return回去也是个promise对象
         })
+    },
+    //注册用户
+    userRegister({commit},data) {
+       return this.$axios({
+            url: "/accounts/register",
+            method: "POST",
+            // headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            // 流浪器会默认转换自动设置的Content-Type
+            // 500可能是data传多崩掉了。400传入的东西有问题 或则是多了设置的headers ，404可能是method，url那些有问题，405貌似好像和400一样都是看别人怎么设置的
+            data
+          }).then(res => {
+            // console.log(res);
+            let {data}= res;
+            commit('setUserInfo',data)
+          });
     }
 }
