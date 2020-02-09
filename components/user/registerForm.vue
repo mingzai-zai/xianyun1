@@ -43,6 +43,16 @@
 export default {
   data() {
     var validatePass = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入密码'));
+        } else {
+          if (this.form.checkpass !== '') {
+            this.$refs.form.validateField('checkpass');
+          }
+          callback();
+        }
+      };
+    var validateCheckPass = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请再次输入密码"));
       } else if (value !== this.form.password) {
@@ -68,8 +78,9 @@ export default {
           { required: true, message: "请输入你的名字", trigger: "blur" }
         ],
         captcha: [{ required: true, message: "请输入验证码", trigger: "blur" }],
-        password: [{ required: true, message: "请输入密码", trigger: "blur" }],
-        checkpass: [{ validator: validatePass, trigger: "blur" }]
+        password: [{ validator: validatePass, trigger: 'blur' }],
+        //不要只想着写确认密码才验证，有可能又去改第一次设置密码
+        checkpass: [{ validator: validateCheckPass, trigger: "blur" }]
       }
     };
   },
@@ -121,7 +132,7 @@ export default {
             method: "POST",
             // headers: { "Content-Type": "application/x-www-form-urlencoded" },
             // 流浪器会默认转换自动设置的Content-Type
-            // 500可能是传多崩掉了。400传入的东西有问题  ，404可能是method，url那些有问题，405貌似好像和400一样都是看别人怎么设置的
+            // 500可能是data传多崩掉了。400传入的东西有问题 或则是多了设置的headers ，404可能是method，url那些有问题，405貌似好像和400一样都是看别人怎么设置的
             data: props
           }).then(res => {
             console.log(res);

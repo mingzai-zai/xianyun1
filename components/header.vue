@@ -64,7 +64,12 @@ export default {
           // console.log(1);
           this.$router.push('user/personal')
         }else if(command==='out') {
-          this.$store.commit('user/clearUserMsg',{})
+          // this.$store.commit('user/clearUserMsg',{})这样子做就在store的mutations加多一个方法
+          //可以用原来的方法
+          this.$store.commit('user/setUserInfo',{
+            user:{},
+            token:'',
+          })
           this.$message.success('退出成功')
         }
     }
