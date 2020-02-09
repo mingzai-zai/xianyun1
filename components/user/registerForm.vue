@@ -127,6 +127,7 @@ export default {
         if (valid) {
           // console.log(this.form);
           //这里也可以删除属性delete
+          //...data的data是自己定义的名字
           let { checkpass, ...data } = this.form;
           this.$store.dispatch('user/userRegister',data).then(res=>{
               this.$message.success('注册成功');
