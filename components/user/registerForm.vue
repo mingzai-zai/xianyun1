@@ -43,15 +43,15 @@
 export default {
   data() {
     var validatePass = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请输入密码'));
-        } else {
-          if (this.form.checkpass !== '') {
-            this.$refs.form.validateField('checkpass');
-          }
-          callback();
+      if (value === "") {
+        callback(new Error("请输入密码"));
+      } else {
+        if (this.form.checkpass !== "") {
+          this.$refs.form.validateField("checkpass");
         }
-      };
+        callback();
+      }
+    };
     var validateCheckPass = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请再次输入密码"));
@@ -78,7 +78,7 @@ export default {
           { required: true, message: "请输入你的名字", trigger: "blur" }
         ],
         captcha: [{ required: true, message: "请输入验证码", trigger: "blur" }],
-        password: [{ validator: validatePass, trigger: 'blur' }],
+        password: [{ validator: validatePass, trigger: "blur" }],
         //不要只想着写确认密码才验证，有可能又去改第一次设置密码
         checkpass: [{ validator: validateCheckPass, trigger: "blur" }]
       }
@@ -95,18 +95,18 @@ export default {
         });
         return;
       }
-      if (this.form.username.trim().length !== 11) {
-        this.$alert("手机号码需要11位", "提示", {
+      if (
+        this.form.username.trim().length !== 11 ||
+        !/^1[3-9]\d{9}$/.test(this.form.username)
+      ) {
+        this.$alert("手机号码需要11位而且1(3-9)开头", "提示", {
           confirmButtonText: "确定",
           type: "warning"
         });
         return;
       }
-      this.$axios
-        .post("/captchas", {
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          tel: this.form.username
-        })
+      this.$store
+        .dispatch("user/sendCaptchas", this.form.username)
         .then(result => {
           // console.log(result)
           // this.form.captcha=result.data.code;

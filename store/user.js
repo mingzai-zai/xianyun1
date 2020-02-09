@@ -44,6 +44,17 @@ export const actions= {
             // 返回数据token和user实际上是返回promise
             return data;
         }
+    },
+    //验证码
+    //因为后面也会用到，所以就放在store里面了
+    sendCaptchas(store,data){
+        return this.$axios.post("/captchas", {
+          // headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          //流浪器有默认
+          tel:data
+        }).then(res=>{
+            return res;
+            // 如果组件需要值就return回去，不用的话可以不return，当然此时return回去也是个promise对象
+        })
     }
-    //注册功能
 }
