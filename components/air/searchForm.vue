@@ -27,12 +27,16 @@
           @blur='handleBlur'
         ></el-autocomplete>
       </el-form-item>
+      <!-- 到达城市 -->
       <el-form-item label="到达城市">
         <el-autocomplete
           :fetch-suggestions="queryDestSearch"
           placeholder="请搜索到达城市"
           @select="handleDestSelect"
           class="el-autocomplete"
+          :trigger-on-focus='false'
+          v-model="details_msg.destCity"
+          @blur="handleBlur_to"
         ></el-autocomplete>
       </el-form-item>
       <el-form-item label="出发时间">
@@ -79,8 +83,10 @@ export default {
         destCode: "",
         departDate: ""
       },
-      //接收then成功后的数据
+      //接收then成功后的数据(出发地)
       ok_msg:[],
+      //接收then成功后的数据(目的地)
+      ok2_msg:[],
     };
   },
   methods: {
@@ -121,6 +127,7 @@ export default {
     // 出发城市输入框失去焦点时候默认选择
     handleBlur(){
         // console.log(this.ok_msg)
+        //如果是没有的话就不应该选择了，不然会报错的
         if(this.ok_msg.length===0) return;
         this.details_msg.departCode=this.ok_msg[0].sort;
         //不写下面一行的话当伱写一个字时候只显示一个字，但是真实的是两个字或者n个字的（例如广州）
@@ -129,9 +136,31 @@ export default {
     // 目标城市输入框获得焦点时触发
     // value 是选中的值，cb是回调函数，接收要展示的列表
     queryDestSearch(value, cb) {
-      cb([{ value: 1 }, { value: 2 }, { value: 3 }]);
+      if(value==='') return;
+      this.$axios({
+          url:'/airs/city',
+          params:{
+              name:this.details_msg.destCity,
+          }
+      }).then(res=>{
+          console.log(res);
+          let {data} =res.data;
+          data.map(e=>{
+              e.value=e.name.replace('市','');
+            //   此时就不要用substring可能后面有四个字的呢
+            return e;
+          })
+          cb(data)
+          //尽量不用用同一个数组存
+          this.ok2_msg=data;
+      })
     },
-
+    //目标城市失焦的默认选择
+    handleBlur_to(){
+        if(this.ok2_msg.length===0) return;
+        this.details_msg.destCity=this.ok2_msg[0].value;
+        this.details_msg.destCode=this.ok2_msg[0].sort;
+    },
     // 出发城市下拉选择时触发
     handleDepartSelect(item) {
     //   console.log(item);
@@ -139,7 +168,9 @@ export default {
     },
 
     // 目标城市下拉选择时触发
-    handleDestSelect(item) {},
+    handleDestSelect(item) {
+         this.details_msg.destCode = item.sort;
+    },
 
     // 确认选择日期时触发
     handleDate(value) {},
