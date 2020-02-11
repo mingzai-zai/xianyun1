@@ -108,7 +108,7 @@ export default {
     searchPlace(value,cb) {
       if (value === "") return;
       //   if(!value) return;
-      this.$axios({
+     return this.$axios({
         url: "/airs/city",
         params: {
           name:value
@@ -124,21 +124,26 @@ export default {
         });
         // console.log(this);
         //尽量不用用同一个数组存
+        // 第一种拿到关键字相关数据做法
         // console.log(this.$refs.from.$refs.input.value)
-        if(this.$refs.from.$refs.input.value===value) {
-            this.ok_msg = data;
-        }else if(this.$refs.to.$refs.input.value===value) {
-            this.ok2_msg=data;
-        }
-        
+        // if(this.$refs.from.$refs.input.value===value) {
+        //     this.ok_msg = data;
+        // }else if(this.$refs.to.$refs.input.value===value) {
+        //     this.ok2_msg=data;
+        // }
         cb(data);
+        // 第二种同时整个promise都要return看111行
+        //111行是return  promise对象但是下面一行return   promise里面的数据
+        return data;
       });
     },
 
     // 出发城市输入框获得焦点时触发
     // value 是选中的值，cb是回调函数，接收要展示的列表(必须是value才能展示)
     queryDepartSearch(value, cb) {
-        this.searchPlace(value,cb)
+        this.searchPlace(value,cb).then(res=>{
+            this.ok_msg=res;
+        })
       //   cb([{ value: 1 }, { value: 2 }, { value: 3 }]);
     },
 
@@ -155,7 +160,9 @@ export default {
     // 目标城市输入框获得焦点时触发
     // value 是选中的值，cb是回调函数，接收要展示的列表
     queryDestSearch(value, cb) {
-        this.searchPlace(value,cb)
+        this.searchPlace(value,cb).then(res=>{
+            this.ok2_msg=res;
+        })
     },
 
     //目标城市失焦的默认选择
