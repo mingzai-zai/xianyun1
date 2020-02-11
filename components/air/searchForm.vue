@@ -23,8 +23,8 @@
           placeholder="请搜索出发城市"
           @select="handleDepartSelect"
           class="el-autocomplete"
-          :trigger-on-focus='false'
-          @blur='handleBlur'
+          :trigger-on-focus="false"
+          @blur="handleBlur"
         ></el-autocomplete>
       </el-form-item>
       <!-- 到达城市 -->
@@ -34,7 +34,7 @@
           placeholder="请搜索到达城市"
           @select="handleDestSelect"
           class="el-autocomplete"
-          :trigger-on-focus='false'
+          :trigger-on-focus="false"
           v-model="details_msg.destCity"
           @blur="handleBlur_to"
         ></el-autocomplete>
@@ -46,6 +46,7 @@
           placeholder="请选择日期"
           style="width: 100%;"
           @change="handleDate"
+          v-model="details_msg.departDate"
         >
         </el-date-picker>
       </el-form-item>
@@ -67,6 +68,7 @@
 </template>
 
 <script>
+import moment from "moment";
 export default {
   data() {
     return {
@@ -84,9 +86,9 @@ export default {
         departDate: ""
       },
       //接收then成功后的数据(出发地)
-      ok_msg:[],
+      ok_msg: [],
       //接收then成功后的数据(目的地)
-      ok2_msg:[],
+      ok2_msg: []
     };
   },
   methods: {
@@ -104,7 +106,7 @@ export default {
     // value 是选中的值，cb是回调函数，接收要展示的列表(必须是value才能展示)
     queryDepartSearch(value, cb) {
       if (value === "") return;
-    //   if(!value) return;
+      //   if(!value) return;
       this.$axios({
         url: "/airs/city",
         params: {
@@ -118,62 +120,66 @@ export default {
           return e;
         });
         // console.log(this);
-        this.ok_msg=data
+        this.ok_msg = data;
         cb(data);
       });
-      
+
       //   cb([{ value: 1 }, { value: 2 }, { value: 3 }]);
     },
     // 出发城市输入框失去焦点时候默认选择
-    handleBlur(){
-        // console.log(this.ok_msg)
-        //如果是没有的话就不应该选择了，不然会报错的
-        if(this.ok_msg.length===0) return;
-        this.details_msg.departCode=this.ok_msg[0].sort;
-        //不写下面一行的话当伱写一个字时候只显示一个字，但是真实的是两个字或者n个字的（例如广州）
-        this.details_msg.departCity=this.ok_msg[0].value;
+    handleBlur() {
+      // console.log(this.ok_msg)
+      //如果是没有的话就不应该选择了，不然会报错的
+      if (this.ok_msg.length === 0) return;
+      this.details_msg.departCode = this.ok_msg[0].sort;
+      //不写下面一行的话当伱写一个字时候只显示一个字，但是真实的是两个字或者n个字的（例如广州）
+      this.details_msg.departCity = this.ok_msg[0].value;
     },
     // 目标城市输入框获得焦点时触发
     // value 是选中的值，cb是回调函数，接收要展示的列表
     queryDestSearch(value, cb) {
-      if(value==='') return;
+      if (value === "") return;
       this.$axios({
-          url:'/airs/city',
-          params:{
-              name:this.details_msg.destCity,
-          }
-      }).then(res=>{
-          console.log(res);
-          let {data} =res.data;
-          data.map(e=>{
-              e.value=e.name.replace('市','');
-            //   此时就不要用substring可能后面有四个字的呢
-            return e;
-          })
-          cb(data)
-          //尽量不用用同一个数组存
-          this.ok2_msg=data;
-      })
+        url: "/airs/city",
+        params: {
+          name: this.details_msg.destCity
+        }
+      }).then(res => {
+        console.log(res);
+        let { data } = res.data;
+        data.map(e => {
+          e.value = e.name.replace("市", "");
+          //   此时就不要用substring可能后面有四个字的呢
+          return e;
+        });
+        cb(data);
+        //尽量不用用同一个数组存
+        this.ok2_msg = data;
+      });
     },
     //目标城市失焦的默认选择
-    handleBlur_to(){
-        if(this.ok2_msg.length===0) return;
-        this.details_msg.destCity=this.ok2_msg[0].value;
-        this.details_msg.destCode=this.ok2_msg[0].sort;
+    handleBlur_to() {
+      if (this.ok2_msg.length === 0) return;
+      this.details_msg.destCity = this.ok2_msg[0].value;
+      this.details_msg.destCode = this.ok2_msg[0].sort;
     },
     // 出发城市下拉选择时触发
     handleDepartSelect(item) {
-    //   console.log(item);
+      //   console.log(item);
       this.details_msg.departCode = item.sort;
     },
 
     // 目标城市下拉选择时触发
     handleDestSelect(item) {
-         this.details_msg.destCode = item.sort;
+      this.details_msg.destCode = item.sort;
     },
 
     // 确认选择日期时触发
-    handleDate(value) {},
+    handleDate(value) {
+      //   console.log(value);
+      // 过滤器是渲染页面时候该的格式，但是这里是传参
+      this.details_msg.departDate = moment(value).format("YYYY-MM-DD");
+    },
 
     // 触发和目标城市切换时触发
     handleReverse() {},
