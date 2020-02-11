@@ -141,6 +141,7 @@ export default {
     // 出发城市输入框获得焦点时触发
     // value 是选中的值，cb是回调函数，接收要展示的列表(必须是value才能展示)
     queryDepartSearch(value, cb) {
+        //传入的东西不能带this
         this.searchPlace(value,cb).then(res=>{
             this.ok_msg=res;
         })
