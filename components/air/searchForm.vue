@@ -182,7 +182,15 @@ export default {
     },
 
     // 触发和目标城市切换时触发
-    handleReverse() {},
+    handleReverse() {
+      let { departCity, departCode, destCity, destCode } = this.details_msg;
+      //出发=》目的
+      this.details_msg.departCity = destCity;
+      this.details_msg.departCode = destCode;
+      //目的=》出发
+      this.details_msg.destCity = departCity;
+      this.details_msg.destCode = departCode;
+    },
 
     // 提交表单是触发
     handleSubmit() {
