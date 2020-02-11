@@ -24,7 +24,8 @@
           @select="handleDepartSelect"
           class="el-autocomplete"
           :trigger-on-focus="false"
-          @blur="handleBlur"
+          @blur="handleBlur_from"
+          ref="from"
         ></el-autocomplete>
       </el-form-item>
       <!-- 到达城市 -->
@@ -37,6 +38,7 @@
           :trigger-on-focus="false"
           v-model="details_msg.destCity"
           @blur="handleBlur_to"
+          ref="to"
         ></el-autocomplete>
       </el-form-item>
       <el-form-item label="出发时间">
@@ -102,61 +104,60 @@ export default {
       }
     },
 
-    // 出发城市输入框获得焦点时触发
-    // value 是选中的值，cb是回调函数，接收要展示的列表(必须是value才能展示)
-    queryDepartSearch(value, cb) {
+    //搜索地方封装
+    searchPlace(value,cb) {
       if (value === "") return;
       //   if(!value) return;
       this.$axios({
         url: "/airs/city",
         params: {
-          name: this.details_msg.departCity
+          name:value
+        //   name: this.details_msg.departCity
         }
       }).then(res => {
         //   console.log(res);
         const { data } = res.data;
         data.map(e => {
+            //   此时就不要用substring可能后面有四个字的呢
           e.value = e.name.replace("市", "");
           return e;
         });
         // console.log(this);
-        this.ok_msg = data;
+        //尽量不用用同一个数组存
+        // console.log(this.$refs.from.$refs.input.value)
+        if(this.$refs.from.$refs.input.value===value) {
+            this.ok_msg = data;
+        }else if(this.$refs.to.$refs.input.value===value) {
+            this.ok2_msg=data;
+        }
+        
         cb(data);
       });
+    },
 
+    // 出发城市输入框获得焦点时触发
+    // value 是选中的值，cb是回调函数，接收要展示的列表(必须是value才能展示)
+    queryDepartSearch(value, cb) {
+        this.searchPlace(value,cb)
       //   cb([{ value: 1 }, { value: 2 }, { value: 3 }]);
     },
+
     // 出发城市输入框失去焦点时候默认选择
-    handleBlur() {
-      // console.log(this.ok_msg)
+    handleBlur_from() {
+    //   console.log(this.ok_msg)
       //如果是没有的话就不应该选择了，不然会报错的
       if (this.ok_msg.length === 0) return;
       this.details_msg.departCode = this.ok_msg[0].sort;
       //不写下面一行的话当伱写一个字时候只显示一个字，但是真实的是两个字或者n个字的（例如广州）
       this.details_msg.departCity = this.ok_msg[0].value;
     },
+
     // 目标城市输入框获得焦点时触发
     // value 是选中的值，cb是回调函数，接收要展示的列表
     queryDestSearch(value, cb) {
-      if (value === "") return;
-      this.$axios({
-        url: "/airs/city",
-        params: {
-          name: this.details_msg.destCity
-        }
-      }).then(res => {
-        // console.log(res);
-        let { data } = res.data;
-        data.map(e => {
-          e.value = e.name.replace("市", "");
-          //   此时就不要用substring可能后面有四个字的呢
-          return e;
-        });
-        cb(data);
-        //尽量不用用同一个数组存
-        this.ok2_msg = data;
-      });
+        this.searchPlace(value,cb)
     },
+
     //目标城市失焦的默认选择
     handleBlur_to() {
       if (this.ok2_msg.length === 0) return;
