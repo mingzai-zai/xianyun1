@@ -145,7 +145,7 @@ export default {
           name: this.details_msg.destCity
         }
       }).then(res => {
-        console.log(res);
+        // console.log(res);
         let { data } = res.data;
         data.map(e => {
           e.value = e.name.replace("市", "");
@@ -186,7 +186,21 @@ export default {
 
     // 提交表单是触发
     handleSubmit() {
-      console.log(this.details_msg);
+      //不能让用户乱来，先判断有没有写好
+      if (!this.details_msg.departCity) {
+        this.$message.error("请填写出发城市");
+        return;
+      }
+      if (!this.details_msg.destCity) {
+        this.$message.error("请填写到达城市");
+        return;
+      }
+      if (!this.details_msg.departDate) {
+        this.$message.error("请填写出发日期");
+        return;
+      }
+      //   console.log(this.details_msg);
+      this.$router.push({ path: "/air/flights", query: this.details_msg });
     }
   },
   mounted() {}
