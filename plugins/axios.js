@@ -6,8 +6,8 @@
 // 这时候的onError方法只拦截错误400,401,403等等流浪器报错（红色），以前的拦截器拦截所有各种情况
 import {Message} from 'element-ui'
 export default (data)=>{
-    console.log(data);
-    console.log('啦啦啦啦啦');
+    // console.log(data);
+    // console.log('啦啦啦啦啦');
     //axios里面有onError这个方法
     // 记住err有reponse这个属性
     data.$axios.onError(err=>{
