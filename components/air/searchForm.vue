@@ -106,7 +106,11 @@ export default {
 
     //搜索地方封装
     searchPlace(value,cb) {
-      if (value === "") return;
+      if (value === "") {
+        //让一开始没有数据显示就没有转圈圈的东西了
+        cb([]);
+        return
+      };
       //   if(!value) return;
      return this.$axios({
         url: "/airs/city",
@@ -152,7 +156,8 @@ export default {
     handleBlur_from() {
     //   console.log(this.ok_msg)
       //如果是没有的话就不应该选择了，不然会报错的
-      if (this.ok_msg.length === 0) return;
+      //还有bug，就是输入广州失焦，然后删掉，还是会显示广州，因为删完之后是return的，所以广字时候还有三个数据，所以删完还是显示广州
+      if (this.ok_msg.length === 0 || !this.details_msg.departCity) return;
       this.details_msg.departCode = this.ok_msg[0].sort;
       //不写下面一行的话当伱写一个字时候只显示一个字，但是真实的是两个字或者n个字的（例如广州）
       this.details_msg.departCity = this.ok_msg[0].value;
@@ -168,7 +173,7 @@ export default {
 
     //目标城市失焦的默认选择
     handleBlur_to() {
-      if (this.ok2_msg.length === 0) return;
+      if (this.ok2_msg.length === 0 || !this.details_msg.destCity) return;
       this.details_msg.destCity = this.ok2_msg[0].value;
       this.details_msg.destCode = this.ok2_msg[0].sort;
     },
