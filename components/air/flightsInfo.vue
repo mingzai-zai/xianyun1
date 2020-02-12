@@ -1,7 +1,7 @@
 <template>
   <div class="flight-item">
     <!-- 有时候在组件中点击不行的话，如果可行就在外面给一个div包着让它来显示 -->
-    <div @click="flag=!flag">
+    <div @click="flag = !flag">
       <!-- 显示的机票信息 -->
       <el-row type="flex" align="middle" class="flight-info">
         <el-col :span="6">
@@ -20,7 +20,7 @@
               >
             </el-col>
             <el-col :span="8" class="flight-time">
-              <span>2时20分</span>
+              <span>{{ needTime }}</span>
             </el-col>
             <el-col :span="8" class="flight-airport">
               <strong>{{ data.arr_time }}</strong>
@@ -36,7 +36,7 @@
         </el-col>
       </el-row>
     </div>
-    <div class="flight-recommend" v-show='flag'>
+    <div class="flight-recommend" v-show="flag">
       <!-- 隐藏的座位信息列表 -->
       <el-row type="flex" justify="space-between" align="middle">
         <el-col :span="4">低价推荐</el-col>
@@ -70,7 +70,7 @@
 export default {
   data() {
     return {
-        flag:false,
+      flag: false
     };
   },
   props: {
@@ -82,6 +82,26 @@ export default {
       default: {}
     }
   },
+  computed: {
+    //如果只是单个就选择watch，多个就用计算属性
+    needTime() {
+        // console.log(this.data)
+      let start = this.data.dep_time.split(":");
+      let end = this.data.arr_time.split(":");
+      //split把它们分开且组了一个数组，同时每一项都是字符串
+      //数据不对就看类型在加减时候有没有问题，很可能都是字符串相加，加法都是优先字符串的拼接*/就先转数字
+    //   let all = end[0] * 60 + +end[1] - start[0] * 60 - +start[1];
+    //   let all = end[0] * 60 + ~~end[1] - start[0] * 60 - ~~start[1];向下取整
+      let all = end[0] * 60 + Number(end[1]) - start[0] * 60 - Number(start[1]);
+      if(end[0] < start[0]) {
+          all += 24*60;
+      }
+    //   let hour = Math.floor(all / 60);
+      let hour = ~~(all / 60);
+      let min = all % 60;
+      return `${hour}小时${min}分`;
+    }
+  }
 };
 </script>
 
