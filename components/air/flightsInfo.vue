@@ -1,9 +1,12 @@
 <template>
   <div class="flight-item">
-    <div>
+    <!-- 有时候在组件中点击不行的话，如果可行就在外面给一个div包着让它来显示 -->
+    <div @click="flag=!flag">
       <!-- 显示的机票信息 -->
-      <el-row type="flex" align="middle" class="flight-info" @click="slidedown">
-        <el-col :span="6"> <span>{{data.airline_name}} </span> {{data.flight_no}} </el-col>
+      <el-row type="flex" align="middle" class="flight-info">
+        <el-col :span="6">
+          <span>{{ data.airline_name }} </span> {{ data.flight_no }}
+        </el-col>
         <el-col :span="12">
           <el-row
             type="flex"
@@ -11,24 +14,29 @@
             class="flight-info-center"
           >
             <el-col :span="8" class="flight-airport">
-              <strong>{{data.dep_time}}</strong>
-              <span>{{data.org_airport_name}}{{data.org_airport_quay}}</span>
+              <strong>{{ data.dep_time }}</strong>
+              <span
+                >{{ data.org_airport_name }}{{ data.org_airport_quay }}</span
+              >
             </el-col>
             <el-col :span="8" class="flight-time">
               <span>2时20分</span>
             </el-col>
             <el-col :span="8" class="flight-airport">
-              <strong>{{data.arr_time}}</strong>
-              <span>{{data.dst_airport_name}}{{data.dst_airport_quay}}</span>
+              <strong>{{ data.arr_time }}</strong>
+              <span
+                >{{ data.dst_airport_name }}{{ data.dst_airport_quay }}</span
+              >
             </el-col>
           </el-row>
         </el-col>
         <el-col :span="6" class="flight-info-right">
-          ￥<span class="sell-price">{{data.base_price/2}}</span>起
+          ￥<span class="sell-price">{{ data.base_price / 2 }}</span
+          >起
         </el-col>
       </el-row>
     </div>
-    <div class="flight-recommend">
+    <div class="flight-recommend" v-show='flag'>
       <!-- 隐藏的座位信息列表 -->
       <el-row type="flex" justify="space-between" align="middle">
         <el-col :span="4">低价推荐</el-col>
@@ -38,19 +46,18 @@
             justify="space-between"
             align="middle"
             class="flight-sell"
-            v-for="(e,i) in data.seat_infos" :key="i"
+            v-for="(e, i) in data.seat_infos"
+            :key="i"
           >
             <el-col :span="16" class="flight-sell-left">
-              <span>{{e.name}}</span> | {{e.supplierName}}
+              <span>{{ e.name }}</span> | {{ e.supplierName }}
             </el-col>
-            <el-col :span="5" class="price">
-              ￥{{e.settle_price}}
-            </el-col>
+            <el-col :span="5" class="price"> ￥{{ e.settle_price }} </el-col>
             <el-col :span="3" class="choose-button">
               <el-button type="warning" size="mini">
                 选定
               </el-button>
-              <p>剩余：{{e.discount}}</p>
+              <p>剩余：{{ e.discount }}</p>
             </el-col>
           </el-row>
         </el-col>
@@ -61,20 +68,20 @@
 
 <script>
 export default {
+  data() {
+    return {
+        flag:false,
+    };
+  },
   props: {
     // 数据
     data: {
-      type: Object,//说明data的类型
+      type: Object, //说明data的类型
       // 默认值是空对象，不传data时候才用的默认值
       //此时流浪器不是报错是vue的warn
       default: {}
     }
   },
-  methods: {
-      slidedown(){
-        
-      }
-  }
 };
 </script>
 
