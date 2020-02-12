@@ -7,10 +7,10 @@
         <div></div>
 
         <!-- 航班头部布局 -->
-        <FilghtsListHeader />
+        <FlightsListHeader />
 
         <!-- 航班信息 -->
-        <div></div>
+        <FlightsInfo />
       </div>
 
       <!-- 侧边栏 -->
@@ -22,14 +22,15 @@
 </template>
 
 <script>
-import FilghtsListHeader from "@/components/air/flightsListHeader";
+import FlightsListHeader from "@/components/air/flightsListHeader";
+import FlightsInfo from "@/components/air/flightsInfo";
 
 export default {
   data() {
     return {};
   },
   components: {
-    FilghtsListHeader
+    FlightsListHeader,FlightsInfo
   }
 };
 </script>
