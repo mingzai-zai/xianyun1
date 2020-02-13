@@ -162,7 +162,13 @@ export default {
     },
 
     // 撤销条件时候触发
-    handleFiltersCancel() {}
+    handleFiltersCancel() {
+        //撤销时候数据为空也会给computed监听到的，所以不用$emit
+         this.airport='';
+         this.flightTimes='';
+         this.company='';
+         this.airSize='';
+    }
   }
 };
 </script>
