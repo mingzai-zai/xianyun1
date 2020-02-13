@@ -4,7 +4,8 @@
       <!-- 顶部过滤列表 -->
       <div class="flights-content">
         <!-- 过滤条件 -->
-        <div></div>
+        <!-- 如果子组件中用了data.info.a  会报错本来data就是空了，再一null.a就会报错一开始什么都没有，所以要在flightsdata加入属性 -->
+        <FlightsFilters  :data="flightsdata" @getdata='getdata'/>
 
         <!-- 航班头部布局 -->
         <FlightsListHeader />
@@ -40,11 +41,18 @@
 <script>
 import FlightsListHeader from "@/components/air/flightsListHeader";
 import FlightsInfo from "@/components/air/flightsInfo";
+import FlightsFilters from "@/components/air/flightsFilters";
 
 export default {
   data() {
     return {
-      flightsdata: {}, //总数据
+      // 此时只是用了一个flightsdata存了这些数据，监听到了flights的改变传回来了，但是点击第二次筛选的时候没了，就是因为，筛选第一次时候只是这一个类型在这个数组了，第二次筛选肯定就没有了。
+      //
+      flightsdata: {
+        flights:[],
+        info:{},
+        options:{},
+      }, //总数据
       // flightslist: [], //航班列表
       pagesize:2,//一页显示多少
       currentpage:1,//显示第几页
@@ -68,13 +76,14 @@ export default {
   },
   components: {
     FlightsListHeader,
-    FlightsInfo
+    FlightsInfo,
+    FlightsFilters
   },
   computed: {
     //因为这里航班的次数不多可以一次性加载，但是如果是文章很多那种就要点击哪页才加载哪页
     flightslist(){
       //刚开始加载时候是什么都没有的；
-      //已经加载了的会缓存，触发的都是新的而已，已加载的不会显示(乱写的)
+      //已经加载了的会缓存，
       //slice是切割
       //slice是切割splice是截取不能用截取的方法
       if(!this.flightsdata.flights) return [];
@@ -87,6 +96,7 @@ export default {
     handleSizeChange(index){
       // console.log(index)
       this.pagesize=index;
+      //为了方便选的时候就跳转到第一页
       this.currentpage=1;
 
     },
@@ -95,7 +105,10 @@ export default {
       // console.log(index)
       this.currentpage=index;
     },
- 
+    getdata(arr){
+      this.flightsdata.flights=arr;
+      this.flightsdata.total=arr.length;
+    }
   }
 };
 </script>
