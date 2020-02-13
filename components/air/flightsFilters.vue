@@ -91,14 +91,28 @@ export default {
   },
   methods: {
     // 选择机场时候触发
-    handleAirport(value) {},
+    handleAirport(value) {
+        let newData=this.data.flights.filter(e=>{
+            return e.org_airport_name==value;
+        })
+        this.$emit('getdata',newData)
+    },
 
     // 选择出发时间时候触发
-    handleFlightTimes(value) {},
+    handleFlightTimes(value) {
+        console.log(value);
+        let arr = value.split(',');
+        let newData=this.data.flights.filter(e=>{
+            //只需要比较小时就好了，注意切割完是字符串来的
+            let hour= e.dep_time.split(':')
+            return +arr[0]<= +hour[0] && +hour[0] < +arr[1];
+        })
+        this.$emit('getdata',newData)
+    },
 
     // 选择航空公司时候触发
     handleCompany(value) {
-        console.log(value);
+        // console.log(value);
         let newData=this.data.flights.filter(e=>{
             return e.airline_name==value;
         })
@@ -106,7 +120,12 @@ export default {
     },
 
     // 选择机型时候触发
-    handleAirSize(value) {},
+    handleAirSize(value) {
+        let newData=this.data.flights.filter(e=>{
+            return e.plane_size==value;
+        })
+        this.$emit('getdata',newData)
+    },
 
     // 撤销条件时候触发
     handleFiltersCancel() {}

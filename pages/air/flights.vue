@@ -5,7 +5,7 @@
       <div class="flights-content">
         <!-- 过滤条件 -->
         <!-- 如果子组件中用了data.info.a  会报错本来data就是空了，再一null.a就会报错一开始什么都没有，所以要在flightsdata加入属性 -->
-        <FlightsFilters  :data="flightsdata" @getdata='getdata'/>
+        <FlightsFilters  :data="flightsdata_again" @getdata='getdata'/>
 
         <!-- 航班头部布局 -->
         <FlightsListHeader />
@@ -46,13 +46,19 @@ import FlightsFilters from "@/components/air/flightsFilters";
 export default {
   data() {
     return {
+      //这里的第二次是单个筛选的第二次
       // 此时只是用了一个flightsdata存了这些数据，监听到了flights的改变传回来了，但是点击第二次筛选的时候没了，就是因为，筛选第一次时候只是这一个类型在这个数组了，第二次筛选肯定就没有了。
-      //
-      flightsdata: {
+      //所以这里就需要一个新的数组来存着相当于一个是用来存数据的，一个是用来改数据的，而且该数据的同时一定要在原来存数据的基础上来改，这样第二次就不会没有数据了
+      flightsdata: {  //总数据（存改的）
         flights:[],
         info:{},
         options:{},
-      }, //总数据
+      }, 
+      flightsdata_again: {  //总数据（存的）
+        flights:[],
+        info:{},
+        options:{},
+      }, 
       // flightslist: [], //航班列表
       pagesize:2,//一页显示多少
       currentpage:1,//显示第几页
@@ -72,6 +78,8 @@ export default {
       this.flightsdata = data;
       //先全部存起来后面就可以方便用，不然也可以设置四个数据一个一个接收
       // this.flightslist = this.flightsdata.flights;
+      // this.flightsdata_again=data不能这样存同一个data对象，因为会保存的是地址，如果一个改变其他都会改变（）浅拷贝，展开就是深拷贝，拷贝的是值，地址自己来，犹如鸡蛋挑骨头，挑出来就是nbsp（深）
+      this.flightsdata_again={...data}
     });
   },
   components: {
