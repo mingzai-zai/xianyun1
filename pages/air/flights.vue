@@ -33,6 +33,7 @@
       <!-- 侧边栏 -->
       <div class="aside">
         <!-- 侧边栏组件 -->
+        <FlightsAside />
       </div>
     </el-row>
   </section>
@@ -42,6 +43,7 @@
 import FlightsListHeader from "@/components/air/flightsListHeader";
 import FlightsInfo from "@/components/air/flightsInfo";
 import FlightsFilters from "@/components/air/flightsFilters";
+import FlightsAside from '@/components/air/flightsAside'
 
 export default {
   data() {
@@ -85,7 +87,8 @@ export default {
   components: {
     FlightsListHeader,
     FlightsInfo,
-    FlightsFilters
+    FlightsFilters,
+    FlightsAside,
   },
   computed: {
     //因为这里航班的次数不多可以一次性加载，但是如果是文章很多那种就要点击哪页才加载哪页
