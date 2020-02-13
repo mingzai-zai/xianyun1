@@ -64,6 +64,7 @@
       >
         撤销
       </el-button>
+      {{changearr}}
     </div>
   </div>
 </template>
@@ -89,42 +90,75 @@ export default {
       ]
     };
   },
+  computed: {
+      //computed一开始加载就会执行一次
+      //在这里changearr只是为了传数据，不是为了在页面上显示什么
+      //因为这里是监听多个属性的变化
+      changearr(){
+        //   console.log(456)
+        let newdata =this.data.flights.filter(e=>{
+            // 假设都成立的时候
+            let flag =true;
+            //这里一定要有this.airport，如果没有的话一开始是空的，就代表空也是false，那一开始就没有数据了，但是这里一开始都应该把所有都要展示
+            //如果只是单个筛选可以选择else if来做(好像不行)
+            if(this.airport && e.org_airport_name!==this.airport) {
+                flag=false;
+            }
+            else if(this.company && e.airline_name !== this.company) {
+                flag= false;
+            }
+            if(this.airSize && e.plane_size !== this.airSize) {
+                flag=false;
+            }
+            let arr = this.flightTimes.split(',')
+            let hour = +e.dep_time.split(':')[0]
+            if(this.flightTimes && (hour < +arr[0] || hour>= +arr[1])) {
+                flag=false;
+            }
+            //此时只会把true的才会返回给数组
+            return flag;
+        })
+          this.$emit('getdata',newdata)
+          return '';
+      }
+      
+  },
   methods: {
     // 选择机场时候触发
     handleAirport(value) {
-        let newData=this.data.flights.filter(e=>{
-            return e.org_airport_name==value;
-        })
-        this.$emit('getdata',newData)
+        // let newData=this.data.flights.filter(e=>{
+        //     return e.org_airport_name==value;
+        // })
+        // this.$emit('getdata',newData)
     },
 
     // 选择出发时间时候触发
     handleFlightTimes(value) {
-        console.log(value);
-        let arr = value.split(',');
-        let newData=this.data.flights.filter(e=>{
-            //只需要比较小时就好了，注意切割完是字符串来的
-            let hour= e.dep_time.split(':')
-            return +arr[0]<= +hour[0] && +hour[0] < +arr[1];
-        })
-        this.$emit('getdata',newData)
+        // console.log(value);
+        // let arr = value.split(',');
+        // let newData=this.data.flights.filter(e=>{
+        //     //只需要比较小时就好了，注意切割完是字符串来的
+        //     let hour= e.dep_time.split(':')
+        //     return +arr[0]<= +hour[0] && +hour[0] < +arr[1];
+        // })
+        // this.$emit('getdata',newData)
     },
 
     // 选择航空公司时候触发
     handleCompany(value) {
         // console.log(value);
-        let newData=this.data.flights.filter(e=>{
-            return e.airline_name==value;
-        })
-        this.$emit('getdata',newData)
+        // let newData=this.data.flights.filter(e=>{
+        //     return e.airline_name==value;
+        // })
+        // this.$emit('getdata',newData)
     },
 
     // 选择机型时候触发
     handleAirSize(value) {
-        let newData=this.data.flights.filter(e=>{
-            return e.plane_size==value;
-        })
-        this.$emit('getdata',newData)
+        // let newData=this.data.flights.filter(e=>{
+        //     return e.plane_size==value;
+        // })
+        // this.$emit('getdata',newData)
     },
 
     // 撤销条件时候触发
