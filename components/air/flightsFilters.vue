@@ -104,7 +104,7 @@ export default {
             if(this.airport && e.org_airport_name!==this.airport) {
                 flag=false;
             }
-            else if(this.company && e.airline_name !== this.company) {
+            if(this.company && e.airline_name !== this.company) {
                 flag= false;
             }
             if(this.airSize && e.plane_size !== this.airSize) {
