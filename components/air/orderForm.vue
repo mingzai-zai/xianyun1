@@ -3,14 +3,15 @@
         <div class="air-column">
             <h2>剩机人</h2>
             <el-form class="member-info">
-                <div class="member-info-item" >
+                <div class="member-info-item" v-for="(e,i) in form.users" :key="i">
 
                     <el-form-item label="乘机人类型">
-                        <el-input placeholder="姓名" class="input-with-select">
+                        <el-input placeholder="姓名" class="input-with-select" v-model="e.username">
                             <el-select 
                             slot="prepend" 
                             value="1" 
                             placeholder="请选择">
+                            <!-- 基本买的机票都是以成人来出售 -->
                                 <el-option label="成人" value="1"></el-option>
                             </el-select>
                         </el-input>
@@ -18,7 +19,7 @@
 
                     <el-form-item label="证件类型">
                         <el-input 
-                        placeholder="证件号码"  class="input-with-select">
+                        placeholder="证件号码"  class="input-with-select" v-model="e.id">
                             <el-select 
                             slot="prepend" 
                             value="1"           
@@ -28,7 +29,7 @@
                         </el-input>
                     </el-form-item>
 
-                    <span class="delete-user" @click="handleDeleteUser()">-</span>
+                    <span class="delete-user" @click="handleDeleteUser(i)">-</span>
                 </div>
             </el-form>
 
@@ -38,10 +39,11 @@
         <div class="air-column">
             <h2>保险</h2>
             <div>
-                <div class="insurance-item">
+                <div class="insurance-item" v-for="(e,i) in insuranceslist" :key="i">
                     <el-checkbox 
-                    label="航空意外险：￥30/份×1  最高赔付260万" 
-                    border>
+                    :label="`${e.type}：￥${e.price}/份×1  最高赔付${e.compensation}`"
+                    border
+                    @change="buy(e.id)">
                     </el-checkbox> 
                 </div>
             </div>
@@ -52,11 +54,11 @@
             <div class="contact">
                 <el-form label-width="60px">
                     <el-form-item label="姓名">
-                        <el-input></el-input>
+                        <el-input v-model="form.contactName"></el-input>
                     </el-form-item>
 
                     <el-form-item label="手机">
-                        <el-input placeholder="请输入内容">
+                        <el-input placeholder="请输入内容" v-model="form.contactPhone">
                             <template slot="append">
                             <el-button @click="handleSendCaptcha">发送验证码</el-button>
                             </template>
@@ -64,7 +66,7 @@
                     </el-form-item>
 
                     <el-form-item label="验证码">
-                        <el-input></el-input>
+                        <el-input v-model="form.captcha"></el-input>
                     </el-form-item>
                 </el-form>   
                 <el-button type="warning" class="submit" @click="handleSubmit">提交订单</el-button>
@@ -91,30 +93,79 @@ export default {
                 captcha:'',//验证码
                 //这里没有发票的，所以直接false
                 invoice:false,
-                seat_xid:'',//座位id
-                air:'',//航班id
-            }      
+                seat_xid:this.$route.query.seat_xid,//座位id
+                air:this.$route.query.id,//航班id
+            },
+            insuranceslist:[]      
         }
+    },
+    mounted(){
+        //  const {id,seat_xid} = this.$route.query
+        // this.$axios({
+        //     url:'/airs/'+id,
+        //     params:{
+        //         seat_xid,
+        //     }
+        this.$axios({
+            url:'/airs/'+this.form.air,
+            params:{
+                seat_xid:this.form.seat_xid,
+            }
+        }).then(res=>{
+            // console.log(res);
+            let {insurances} = res.data;
+             this.insuranceslist= insurances;
+        })
     },
     methods: {
         // 添加乘机人
         handleAddUsers(){
-            
+            this.form.users.push({
+                username:'',
+                id:'',
+            })
         },
         
         // 移除乘机人
-        handleDeleteUser(){
-
+        handleDeleteUser(index){
+            // console.log(index);
+            this.form.users.splice(index,1)
         },
-        
+        //买保险
+        buy(id){
+            //只能用change事件，文档里面有说
+            //some，find，filter都是以自己有的条件来改造的，如果是空，用空来对比，结果还是空
+            // this.form.insurances.filter(e=>{
+            //     return e!==id;
+            // })
+
+            //indexOf用法
+            let suoyin = this.form.insurances.indexOf(id);
+            if(suoyin<0) {
+                this.form.insurances.push(id);
+            }else {
+                this.form.insurances.forEach(e => {
+                    this.form.insurances.splice(suoyin,1)
+                });
+            }
+            console.log(this.form.insurances)
+        },
         // 发送手机验证码
         handleSendCaptcha(){
-            
+            if(!this.form.contactPhone) {
+                this.$message.error('请输入手机号码')
+                return;
+            }
+            //注册界面的获取验证码一样的
+            this.$store.dispatch('user/sendCaptchas',this.form.contactPhone).then(res=>{
+                // console.log(res);
+                this.$message.success('你的验证码是：' + res.data.code)
+            })
         },
 
         // 提交订单
         handleSubmit(){
-            
+            console.log(this.form)
         }
     }
 }
