@@ -54,7 +54,7 @@
             </el-col>
             <el-col :span="5" class="price"> ￥{{ e.settle_price }} </el-col>
             <el-col :span="3" class="choose-button">
-              <el-button type="warning" size="mini">
+              <el-button type="warning" size="mini" @click="to_order(e)">
                 选定
               </el-button>
               <p>剩余：{{ e.discount }}</p>
@@ -100,6 +100,19 @@ export default {
       let hour = ~~(all / 60);
       let min = all % 60;
       return `${hour}小时${min}分`;
+    }
+  },
+  methods: {
+    to_order(e) {
+      // console.log(e)
+      // console.log(this.data)
+      this.$router.push({
+        path:'/air/order',
+        query:{
+          id:this.data.id,
+          seat_xid:e.seat_xid,
+        }
+      })
     }
   }
 };
