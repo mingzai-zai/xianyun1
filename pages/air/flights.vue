@@ -66,23 +66,25 @@ export default {
       currentpage:1,//显示第几页
     };
   },
+  //不写监听和跳转不了，组件有缓存，没有销毁
+  // watch:{
+  //   $route(){
+  //     // console.log(this.$route)
+  //     this.showdata();
+  //     //如果computed里面点击currentpage是20页左右的，但是点击跳转到另一个航班时候并没有那么多时候，所以每次点击跳转时候
+  //     this.curretnpage=1;
+  //   }
+  // },
+  // 局部组件的导航守卫
+   beforeRouteUpdate (to, from, next) {
+    // 在当前路由改变，但是该组件被复用时调用
+    //next可以跳转，刷新的是url
+    next();
+    this.showdata();
+    this.currentpage=1;
+  },
   mounted() {
-    // console.log(this.$route)去query的参数有相关URL都可以打印出来看看
-    // 就是从路由里面那数据
-    // query的数据刚好是要传的数据
-    this.$axios({
-      url: "/airs",
-      params: this.$route.query
-    }).then(res => {
-      // console.log(res);
-      // data包含着flights，info，options，total四个数据
-      let { data } = res;
-      this.flightsdata = data;
-      //先全部存起来后面就可以方便用，不然也可以设置四个数据一个一个接收
-      // this.flightslist = this.flightsdata.flights;
-      // this.flightsdata_again=data不能这样存同一个data对象，因为会保存的是地址，如果一个改变其他都会改变（）浅拷贝，展开就是深拷贝，拷贝的是值，地址自己来，犹如鸡蛋挑骨头，挑出来就是nbsp（深）
-      this.flightsdata_again={...data}
-    });
+    this.showdata();
   },
   components: {
     FlightsListHeader,
@@ -119,6 +121,25 @@ export default {
     getdata(arr){
       this.flightsdata.flights=arr;
       this.flightsdata.total=arr.length;
+    },
+    // 渲染页面的封装
+    showdata(){
+      // console.log(this.$route)去query的参数有相关URL都可以打印出来看看
+    // 就是从路由里面那数据
+    // query的数据刚好是要传的数据
+    this.$axios({
+      url: "/airs",
+      params: this.$route.query
+    }).then(res => {
+      // console.log(res);
+      // data包含着flights，info，options，total四个数据
+      let { data } = res;
+      this.flightsdata = data;
+      //先全部存起来后面就可以方便用，不然也可以设置四个数据一个一个接收
+      // this.flightslist = this.flightsdata.flights;
+      // this.flightsdata_again=data不能这样存同一个data对象，因为会保存的是地址，如果一个改变其他都会改变（）浅拷贝，展开就是深拷贝，拷贝的是值，地址自己来，犹如鸡蛋挑骨头，挑出来就是nbsp（深）
+      this.flightsdata_again={...data}
+    });
     }
   }
 };

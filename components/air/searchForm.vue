@@ -223,6 +223,8 @@ export default {
       }
       //   console.log(this.details_msg);
       this.$router.push({ path: "/air/flights", query: this.details_msg });
+      this.$store.commit('air/setFlightsInfo',this.details_msg)
+      // /air/flights就是根路径第一条'/'但是air/setFlightsInfo会自动去到store里面的，如果跳转时候没有加根路径，它会先默认pages现在的路径好比如user/login,如果我现在在user/login或者是跟路径的index的话还好，但是去到air页面它会默认air/user/login的
     }
   },
   mounted() {}

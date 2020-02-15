@@ -27,7 +27,7 @@
           </el-dropdown-menu>
         </el-dropdown>
         <!-- 没有登录 -->
-        <nuxt-link to="user/login" v-if="!$store.state.user.userInfo.token"
+        <nuxt-link to="/user/login" v-if="!$store.state.user.userInfo.token"
           >登录/注册</nuxt-link
         >
         <!-- 登录后 -->
