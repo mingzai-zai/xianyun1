@@ -148,7 +148,7 @@ export default {
                     this.form.insurances.splice(suoyin,1)
                 });
             }
-            console.log(this.form.insurances)
+            // console.log(this.form.insurances)
         },
         // 发送手机验证码
         handleSendCaptcha(){
@@ -165,7 +165,70 @@ export default {
 
         // 提交订单
         handleSubmit(){
-            console.log(this.form)
+            let rules= {
+                user:{
+                    message:'类型或则是身份证类型不能为空',
+                    // check(){}这样写函数指向的是自己注意的是users是数组有很多，不只是一个，所以要遍历
+                    check:()=>{
+                        let flag = true;
+                        this.form.users.forEach(e=>{
+                            if(!e.username || !e.id) {
+                                flag=false;
+                            }
+                        })
+                        return flag;
+                    }
+                },
+                contactname:{
+                    message:'请输入尊敬大名',
+                    check:()=>{
+                        // !取反 再来一个就是！！反反得正就是原来的       
+                            return !!this.form.contactName
+                    }
+                },
+                contactphone:{
+                    message:'请输入棒棒的密码',
+                    check:()=>{
+                            return !!this.form.contactPhone
+                    }
+                },
+                captcha:{
+                    message:'请输入验证码',
+                    check:()=>{
+                        //return 在根return才是返回给函数在if里面return只是终止代码运行
+                            return !!this.form.captcha
+                    }
+                }
+            }
+            // Object.keys(obj)打印出来的是数组每一个值都是对象的属性
+            let flag =true;
+            //里面只是一个错的条件
+            Object.keys(rules).forEach(e=>{
+                if(!flag) return;
+                //rules[e].check()这里的check一定要有执行
+                if(!rules[e].check()) {
+                    this.$message.error(rules[e].message)
+                    flag=false;
+                }
+            })
+            // console.log(flag);
+            // 如果有错就要终止代码运行（里面终止，到了外面还是要的）
+            if(!flag) return;
+            // console.log(this.form)
+            if(!this.$store.state.user.userInfo.token) {
+                this.$message.warning('请先登录')
+                return;
+            }
+            this.$axios({
+                method:'POST',
+                url:'/airorders',
+                // 原本不用写Bearer 是因为后台写了，看要求来，注意Bearer 有一个空格
+                headers:{'Authorization':'Bearer '+this.$store.state.user.userInfo.token},
+                data:this.form
+            }).then(res=>{
+                // console.log(res);
+                this.$message.success(res.data.message);
+            })
         }
     }
 }
