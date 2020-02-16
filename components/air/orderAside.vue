@@ -42,7 +42,8 @@
     </el-row>
     <el-row type="flex" justify="space-between" align="middle" class="info-bar">
       <span>应付总额：</span>
-      <span class="price">￥ </span>
+      <!-- 不要写在computed接收再赋值，computed只会执行一次 -->
+      <span class="price">￥{{$store.state.air.total}} </span>
     </el-row>
   </div>
 </template>

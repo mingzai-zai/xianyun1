@@ -72,6 +72,7 @@
                 <el-button type="warning" class="submit" @click="handleSubmit">提交订单</el-button>
             </div>
         </div>
+        {{total}}
     </div>
 </template>
 
@@ -96,8 +97,31 @@ export default {
                 seat_xid:this.$route.query.seat_xid,//座位id
                 air:this.$route.query.id,//航班id
             },
-            insuranceslist:[]      
+            insuranceslist:[],
+            oneInfo:{
+                seat_infos:{},
+            },   
         }
+    },
+    computed:{
+        //存到store里面就不用传来传去了；子父子
+        //因为数据要改变，所以在form中改变完之后再传给侧边栏
+        total(){
+            // console.log(1);
+            let price=null;
+            price += this.oneInfo.seat_infos.org_settle_price;
+            //保险都是一起买的
+            this.insuranceslist.forEach(e=>{
+                if(this.form.insurances.indexOf(e.id)>-1) {
+                    price+=e.price;
+                }
+            })
+            price+=this.oneInfo.airport_tax_audlet;
+            price*=this.form.users.length;
+            this.$store.commit('air/setTotal',price)
+            return '';
+        }
+
     },
     mounted(){
         //  const {id,seat_xid} = this.$route.query
@@ -112,10 +136,11 @@ export default {
                 seat_xid:this.form.seat_xid,
             }
         }).then(res=>{
-            console.log(res);
+            // console.log(res);
             let {insurances} = res.data;
              this.insuranceslist= insurances;
-             this.$store.commit('air/setOneInfo',res.data)
+             this.$store.commit('air/setOneInfo',res.data);
+             this.oneInfo=res.data;
         })
     },
     methods: {

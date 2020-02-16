@@ -5,7 +5,9 @@ export const state =()=>{
         oneInfo:{
             //避免报错
             seat_infos:{}
-        }
+        },
+        //总价
+        total:0,
     }
 }
 
@@ -18,6 +20,10 @@ export const mutations= {
     //一个订单详情
     setOneInfo(state,data){
         state.oneInfo=data;
+    },
+    //总价
+    setTotal(state,data){
+        state.total=data;
     }
 
 }
