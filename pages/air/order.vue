@@ -4,17 +4,19 @@
             <!-- 订单表单 -->
             <OrderForm/>
 
-            <!-- 其他代码... -->
+            <!-- 右侧计算总价 -->
+            <OrderAside :data='$store.state.air.oneInfo'/>
         </el-row>
     </div>
 </template>
 
 <script>
 import OrderForm from "@/components/air/orderForm.vue";
+import OrderAside from "@/components/air/orderAside";
 
 export default {
     components: {
-        OrderForm
+        OrderForm,OrderAside
     }
 }
 </script>

@@ -112,9 +112,10 @@ export default {
                 seat_xid:this.form.seat_xid,
             }
         }).then(res=>{
-            // console.log(res);
+            console.log(res);
             let {insurances} = res.data;
              this.insuranceslist= insurances;
+             this.$store.commit('air/setOneInfo',res.data)
         })
     },
     methods: {
