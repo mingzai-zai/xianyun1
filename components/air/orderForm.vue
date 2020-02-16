@@ -215,10 +215,10 @@ export default {
             // 如果有错就要终止代码运行（里面终止，到了外面还是要的）
             if(!flag) return;
             // console.log(this.form)
-            if(!this.$store.state.user.userInfo.token) {
-                this.$message.warning('请先登录')
-                return;
-            }
+            // if(!this.$store.state.user.userInfo.token) {
+            //     this.$message.warning('请先登录')
+            //     return;
+            // }
             this.$axios({
                 method:'POST',
                 url:'/airorders',

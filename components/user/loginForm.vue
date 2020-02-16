@@ -85,7 +85,10 @@ export default {
               this.$message.success('登录成功')
               // console.log(data);
               setTimeout(()=>{
-                this.$router.push('/')
+                // this.$router.push('/')
+                // console.log(this.$router)在原型上（爸爸）有replace可以用有三个参数
+                //把login页面给干掉了，回退时候是回不去的，只会网上一页走
+                this.$router.replace(this.$route.query.returnUrl||'/')
               },1000)
             })
             
