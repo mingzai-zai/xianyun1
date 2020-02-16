@@ -2,10 +2,10 @@
     <div class="container">
         <el-row type="flex" justify="space-between" class="son">
             <!-- 订单表单 -->
-            <OrderForm/>
+            <OrderForm @myclick="num"/>
 
             <!-- 右侧计算总价 -->
-            <OrderAside :data='$store.state.air.oneInfo'/>
+            <OrderAside :data='$store.state.air.oneInfo' :usersnum='usersnum'/>
         </el-row>
     </div>
 </template>
@@ -15,8 +15,19 @@ import OrderForm from "@/components/air/orderForm.vue";
 import OrderAside from "@/components/air/orderAside";
 
 export default {
+    data () {
+        return {
+            usersnum:1,
+        }
+    },
     components: {
         OrderForm,OrderAside
+    },
+    methods:{
+        num(shuzi) {
+            // console.log(shuzi);
+            this.usersnum=shuzi;
+        }
     }
 }
 </script>

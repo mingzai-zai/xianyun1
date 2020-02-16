@@ -150,6 +150,7 @@ export default {
                 username:'',
                 id:'',
             })
+            this.$emit('myclick',this.form.users.length)
         },
         
         // 移除乘机人

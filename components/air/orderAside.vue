@@ -33,12 +33,12 @@
     <el-row type="flex" justify="space-between" class="info-bar">
       <span>成人机票</span>
       <span>￥{{ data.seat_infos.org_settle_price }}</span>
-      <span>x1</span>
+      <span>x{{usersnum}}</span>
     </el-row>
     <el-row type="flex" justify="space-between" class="info-bar">
       <span>机建＋燃油</span>
       <span>¥{{ data.airport_tax_audlet }}/人/单程</span>
-      <span>x1</span>
+      <span>x{{usersnum}}</span>
     </el-row>
     <el-row type="flex" justify="space-between" align="middle" class="info-bar">
       <span>应付总额：</span>
@@ -57,9 +57,16 @@ export default {
           //防止一开始没传data---seat_infoundefined
           seat_info:{}
       }
+    },
+    usersnum: {
+        type:Number,
     }
   },
-
+  watch: {
+      usersnum (){
+          console.log(this.usersnum)
+      }
+  },
   computed: {
     rankTime() {
       // 数据还未请求回来
