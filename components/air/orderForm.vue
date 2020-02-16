@@ -253,8 +253,14 @@ export default {
                 headers:{'Authorization':'Bearer '+this.$store.state.user.userInfo.token},
                 data:this.form
             }).then(res=>{
-                // console.log(res);
-                this.$message.success(res.data.message);
+                console.log(res);
+                this.$message.success(res.data.message+'正在为你跳转');
+                let {id} =res.data.data
+                setTimeout(() => {
+                    this.$router.push({
+                        path:'/air/pay?id='+id,
+                    })
+                }, 1000);
             })
         }
     }
