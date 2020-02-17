@@ -2,7 +2,7 @@
   <div class="container">
     <div class="main">
       <div class="pay-title">
-        支付总金额 <span class="pay-price">￥ 1000</span>
+        支付总金额 <span class="pay-price">￥{{paymoney.price}}</span>
       </div>
       <div class="pay-main">
         <h4>微信支付</h4>
@@ -28,7 +28,64 @@
 </template>
 
 <script>
-export default {};
+import QRCode from 'qrcode'
+export default {
+    data () {
+        return {
+            paymoney:{
+              payInfo:{}
+            },
+            timer:'',
+        }
+    },
+     mounted () {
+        // console.log(this.$route)
+        //获取订单详情
+       setTimeout(async() => {
+         //把这一步安排到队列的最后一步就可以解决了
+         let res =await this.$axios({
+           //有时候会跳到登录页，可能是token还没有赋值到这里(组件加载快，local传给store的慢一点)
+            url:'/airorders/'+this.$route.query.id,
+            headers:{'Authorization':'Bearer '+this.$store.state.user.userInfo.token}
+        }) 
+        // console.log(res);
+        this.paymoney=res.data
+        //生成二维码，其实就是一个连接生成的
+        let canvas= document.getElementById('qrcode-stage')
+        //不放对象里面的话就是一个变量了
+        QRCode.toCanvas(canvas,this.paymoney.payInfo.code_url,{width:200})
+       }, 0);
+
+
+       //订单状态
+       //如果定义时间太短paymoney可能没有数据
+      this.timer =setInterval(async() => {
+        let res = await this.$axios({
+          method:'POST',
+          url:'/airorders/checkpay',
+          headers:{'Authorization':'Bearer '+this.$store.state.user.userInfo.token},
+          data:{
+            id:this.paymoney.id,
+            nonce_str:this.paymoney.price,
+            out_trade_no:this.paymoney.orderNo,
+          }
+        });
+        // console.log(res);
+        if(res.data.statusTxt=='支付完成') {
+          clearInterval(this.timer)
+          this.$alert('感谢您的贵手，支付完成', '提示', {
+          confirmButtonText: '确定',
+          type:'success'
+          });
+        }
+      }, 3000);
+      
+    },
+    destroyed(){
+      //如果用户不买的时候，定时器还是会运行的
+      clearInterval(this.tiemr);
+    }
+};
 </script>
 
 <style scoped lang="less">
